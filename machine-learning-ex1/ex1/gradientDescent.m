@@ -6,7 +6,8 @@ function [theta, J_history] = gradientDescent(X, y, theta, alpha, num_iters)
 % Initialize some useful values
 m = length(y); % number of training examples
 J_history = zeros(num_iters, 1);
-J=zeros(m,1);
+theta_s=theta;
+
 for iter = 1:num_iters
 
     % ====================== YOUR CODE HERE ======================
@@ -16,17 +17,16 @@ for iter = 1:num_iters
     % Hint: While debugging, it can be useful to print out the values
     %       of the cost function (computeCost) and gradient here.
     %
-    J = X*theta-y;
-    temp1=theta(1)-alpha*(1/m)*sum(J.*X(:,1));
-    temp2=theta(2)-alpha*(1/m)*sum(J.*X(:,2));
-    theta(1)=temp1;
-    theta(2)=temp2;
-   
+    theta(1) = theta(1) - alpha / m * sum(X * theta_s - y);       
+    theta(2) = theta(2) - alpha / m * sum((X * theta_s - y) .* X(:,2));     % 必须同时更新theta(1)和theta(2)，所以不能用X * theta,而要用theta_s存储上次结果。
+    theta_s=theta; 
+    
+
     % ============================================================
 
     % Save the cost J in every iteration    
     J_history(iter) = computeCost(X, y, theta);
 
 end
-
+J_history
 end
